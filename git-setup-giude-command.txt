@@ -1,0 +1,75 @@
+**for windows install git bash
+1. Go to your project
+cd ~/personal-knowledge-base
+git status
+
+2. Create a new file
+touch ms-pool_platform_worker.sql
+ls
+3. Open the file and add content
+code ms-pool_platform_worker.sql
+
+4. Check what Git sees
+git status
+
+5. Add the file to Git
+git add ms-pool_platform_worker.sql
+git status
+
+6. Create a commit
+git commit -m "Add platform worker SQL"
+
+7. Upload/push to GitHub
+gh auth setup-git
+git push origin main
+7.1 if not available for authentication type (for windowss)
+  winget install --id GitHub.cli(close and reopen bash)
+  gh --version
+  gh auth login
+  gh auth setup-git
+  gh auth status
+  git status
+7.2 git identity using global username or email
+    git config --global user.name "Prashant"
+    git config --global user.email "prashant.k2411@gmail.com"
+    git commit -m "Add platform worker SQL" 
+
+
+8. Check that everything is synchronized
+git status
+---------------------------
+1. Rename a file
+git mv ms-pool_platform_worker.sql ms-prod_platform_worker.sql
+git status
+git commit -m "Rename platform worker SQL"
+git push origin main
+
+2.If you already renamed it manually 
+git add -A
+git commit -m "Rename SQL file"
+git push origin main
+
+2. Delete a file
+git rm ms-prod_platform_worker.sql
+git status
+git commit -m "Delete platform worker SQL"
+git push origin main
+
+3.If you deleted it manually
+git add -A
+git commit -m "Delete platform worker SQL"
+git push origin main
+
+4. Edit a file
+code ms-prod_platform_worker.sql
+Ctrl + S
+git status
+git add ms-prod_platform_worker.sql
+git commit -m "Update platform worker SQL"
+git push origin main
+
+5. See what you changed before committing
+git diff
+
+6.After git add, use:
+git diff --staged
