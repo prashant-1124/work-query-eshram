@@ -1,6 +1,7 @@
 **for windows install git bash
 1. Go to your project
 cd ~/personal-knowledge-base
+git remote -v
 git status
 
 2. Create a new file
