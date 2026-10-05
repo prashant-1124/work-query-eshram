@@ -1,0 +1,57 @@
+STEP-1
+__________________
+create partition in tabular editor
+__________________
+let
+    Source = Sql.Database(
+        "nduwprodsqlserver2.database.windows.net",
+        "nduwproddb_reports"
+    ),
+    tbl_report_aggregated_data_EY =
+        Source{[Schema="dbo", Item="tbl_report_aggregated_data_EY"]}[Data],
+    #"Changed Type" =
+        Table.TransformColumnTypes(
+            tbl_report_aggregated_data_EY,
+            {
+                {"date_of_registration", type datetime}
+            }
+        ),
+    #"Filtered Rows" =
+        Table.SelectRows(
+            #"Changed Type",
+            each [date_of_registration] >= #datetime(2021,10,1,0,0,0)
+            and [date_of_registration] < #datetime(2021,11,1,0,0,0)
+        )
+in
+    #"Filtered Rows"
+___________________
+
+STEP-2
+____________________
+open ssms analysis service and create run below XMLA and MSDAX query
+___________________
+----------------------------
+IN SSMS Analysis service(connect with your power bi workspace)
+-----------------------------
+XMLA query
+----------------------------- 
+{
+"refresh": {
+"type": "full",
+"objects": [
+{
+"database": "eShram_v24 Parameter",
+"table": "tbl_report_aggregated_data_EY",
+"partition": "2021_10"
+}
+]
+-----------------------------
+MSDAX (to verify the data after refresh)
+---------------------------
+EVALUATESUMMARIZECOLUMNS(
+    'tbl_report_aggregated_data_EY'[Year],
+    "Rows", COUNTROWS('tbl_report_aggregated_data_EY'),
+    "MinDate", MIN('tbl_report_aggregated_data_EY'[date_of_registration]),
+    "MaxDate", MAX('tbl_report_aggregated_data_EY'[date_of_registration])
+)
+-------------------------------
