@@ -26,7 +26,7 @@ in
     #"Filtered Rows"
 ___________________
 
-STEP-2
+STEP- 2
 ____________________
 open ssms analysis service and create run below XMLA and MSDAX query
 ___________________
