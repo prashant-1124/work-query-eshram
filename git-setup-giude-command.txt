@@ -14,7 +14,7 @@ code ms-pool_platform_worker.sql
 git status
 
 5. Add the file to Git
-git add ms-pool_platform_worker.sql
+git add ./
 git status
 
 6. Create a commit
