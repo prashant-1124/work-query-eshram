@@ -334,7 +334,8 @@ SELECT
     u.aadhaar_doB,
     u.aadhaar_gender,
     b.Name AS blood_group,
-    n.family_name,
+    n.family_name as occupation,
+    n.consent_agree,
     u.mobile_number,
     CONCAT(
         s.State_Name, ', ',
