@@ -81,3 +81,75 @@ GROUP BY
         WHEN ExactAge BETWEEN 18 AND 39 THEN '18-40 Years'
         ELSE 'others'
     END;
+------------------------------------------------
+--Multiple with calculation for SQL Pool query
+------------------------------------------------
+WITH UniqueAdHash AS (
+    SELECT AadhaarHash512
+    FROM bsm2m.onorc_raw
+    GROUP BY AadhaarHash512
+    HAVING COUNT(1) = 1
+),
+AgeCalculation AS (
+    SELECT
+        Gender,
+        CurrentStateCode,
+        AadhaarHash512,
+        CASE
+            WHEN TRY_CONVERT(DATE, DOB) IS NULL THEN NULL
+            ELSE
+                DATEDIFF(YEAR, TRY_CONVERT(DATE, DOB), GETDATE())
+                - CASE
+                    WHEN MONTH(GETDATE()) < MONTH(TRY_CONVERT(DATE, DOB))
+                      OR (
+                          MONTH(GETDATE()) = MONTH(TRY_CONVERT(DATE, DOB))
+                          AND DAY(GETDATE()) < DAY(TRY_CONVERT(DATE, DOB))
+                      )
+                    THEN 1
+                    ELSE 0
+                  END
+        END AS ExactAge
+    FROM bsm2m.onorc_raw
+    WHERE AadhaarHash512 IN (
+        SELECT AadhaarHash512
+        FROM UniqueAdHash
+    )
+)
+SELECT
+    Gender,
+    CurrentStateCode,
+    CASE
+        WHEN ExactAge BETWEEN 1 AND 17 THEN 'Below 18'
+        WHEN ExactAge BETWEEN 18 AND 20 THEN '18-20 yrs'
+        WHEN ExactAge BETWEEN 21 AND 25 THEN '21-25 yrs'
+        WHEN ExactAge BETWEEN 26 AND 30 THEN '26-30 yrs'
+        WHEN ExactAge BETWEEN 31 AND 35 THEN '31-35 yrs'
+        WHEN ExactAge BETWEEN 36 AND 40 THEN '36-40 yrs'
+        WHEN ExactAge BETWEEN 41 AND 50 THEN '41-50 yrs'
+        WHEN ExactAge BETWEEN 51 AND 55 THEN '51-55 yrs'
+        WHEN ExactAge BETWEEN 56 AND 60 THEN '56-60 yrs'
+        WHEN ExactAge > 60 THEN 'Above 60 yrs'
+        ELSE 'Unknown'
+    END AS AgeGroup,
+    COUNT(1) AS total
+FROM AgeCalculation
+GROUP BY
+    Gender,
+    CurrentStateCode,
+    CASE
+        WHEN ExactAge BETWEEN 1 AND 17 THEN 'Below 18'
+        WHEN ExactAge BETWEEN 18 AND 20 THEN '18-20 yrs'
+        WHEN ExactAge BETWEEN 21 AND 25 THEN '21-25 yrs'
+        WHEN ExactAge BETWEEN 26 AND 30 THEN '26-30 yrs'
+        WHEN ExactAge BETWEEN 31 AND 35 THEN '31-35 yrs'
+        WHEN ExactAge BETWEEN 36 AND 40 THEN '36-40 yrs'
+        WHEN ExactAge BETWEEN 41 AND 50 THEN '41-50 yrs'
+        WHEN ExactAge BETWEEN 51 AND 55 THEN '51-55 yrs'
+        WHEN ExactAge BETWEEN 56 AND 60 THEN '56-60 yrs'
+        WHEN ExactAge > 60 THEN 'Above 60 yrs'
+        ELSE 'Unknown'
+    END
+ORDER BY
+    Gender,
+    CurrentStateCode,
+    AgeGroup;
