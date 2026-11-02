@@ -39,29 +39,29 @@ git push origin main
 8. Check that everything is synchronized
 git status
 ---------------------------
-1. Rename a file
+8.1. Rename a file
 git mv ms-pool_platform_worker.sql ms-prod_platform_worker.sql
 git status
 git commit -m "Rename platform worker SQL"
 git push origin main
 
-2.If you already renamed it manually 
+8.2.If you already renamed it manually 
 git add -A
 git commit -m "Rename SQL file"
 git push origin main
 
-2. Delete a file
+8.3. Delete a file
 git rm ms-prod_platform_worker.sql
 git status
 git commit -m "Delete platform worker SQL"
 git push origin main
 
-3.If you deleted it manually
+8.4.If you deleted it manually
 git add -A
 git commit -m "Delete platform worker SQL"
 git push origin main
 
-4. Edit a file
+8.5. Edit a file
 code ms-prod_platform_worker.sql
 Ctrl + S
 git status
@@ -69,8 +69,14 @@ git add ms-prod_platform_worker.sql
 git commit -m "Update platform worker SQL"
 git push origin main
 
-5. See what you changed before committing
+8.6. See what you changed before committing
 git diff
 
-6.After git add, use:
+8.7.After git add, use:
 git diff --staged
+
+-----------
+9.If you directly uploaded to website or change to github website then take pull to synchronized
+git pull origin main
+git status 
+
