@@ -42,3 +42,70 @@ and uw.aadhaar_gender='T'
 group by a.Name
 --Note** for (others) count please substract from the total count of aggregator wise count[ola,uber,sweegy etc.] 
 --and aggregator category[ride sharing,health care etc.] (total aggregator wise count - total aggregator category)
+---------------------------
+--concatenate multiple platform names for a single user
+----------------------------
+SELECT
+    u.uan_no,
+    u.aadhaar_name,
+    u.Father_name,
+    u.husband_name,
+    u.aadhaar_doB,
+    u.aadhaar_gender,
+    r.Name AS rural_urban,
+    b.Name AS blood_group,
+    n.family_name,
+    n.job_role,
+
+    STRING_AGG(c.Platform_Name, ',') AS Platform_Name,
+
+    u.using_gig_platform,
+
+    CONCAT(
+        s.State_Name, ', ',
+        d.District_name, ', ',
+        sd.Subdistrict_Name, ', ',
+        u.current_pincode
+    ) AS current_Address
+
+FROM uw_registrations u
+
+LEFT JOIN ref_state s
+    ON u.current_state = s.State_lg_Code
+LEFT JOIN ref_district d
+    ON u.current_district = d.District_LG_code
+LEFT JOIN ref_subdistrict sd
+    ON u.current_tehsil = sd.Subdistrict_LG_code
+LEFT JOIN ref_NCO_Occupation n
+    ON n.occupation = u.primary_occupation
+LEFT JOIN ref_blood_group b
+    ON b.Code = u.blood_group
+LEFT JOIN ref_rural_urban r
+    ON r.Code = u.current_rural_urban
+INNER JOIN uw_platform_data p
+    ON p.ad_hashed = u.ad_hashed
+LEFT JOIN ref_aggregator_platform c
+    ON p.platform_id = c.id
+
+WHERE u.uan_no in('784183765358',
+'785324414646',
+'785284474406',
+'783769295674',
+'784231302590',
+'784064168462')
+GROUP BY
+    u.uan_no,
+    u.aadhaar_name,
+    u.Father_name,
+    u.husband_name,
+    u.aadhaar_doB,
+    u.aadhaar_gender,
+    r.Name,
+    b.Name,
+    n.family_name,
+    n.job_role,
+    u.using_gig_platform,
+    s.State_Name,
+    d.District_name,
+    sd.Subdistrict_Name,
+    u.current_pincode;
