@@ -1,6 +1,6 @@
 
 --Fetch full Address with UAN 
--SELECT 
+SELECT 
     u.uan_no,
     u.aadhaar_name,
     u.Father_name,
