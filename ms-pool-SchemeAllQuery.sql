@@ -210,3 +210,13 @@ LEFT JOIN [bsm].[MemberScheme_Lookup_Location_Dim] d
 WHERE dim.Status_Of_ONORC = 'Y'
 AND d.LocationStateCode IN (4,37)
 group by d.LocationStateCode
+--------------------------------
+--for old 37 scheme important tables
+--------------------------------
+Important table for 37 schemes
+[bsm1m].[MemberScheme_Matrix_Fact_20240222]
+[bsm1m].[MemberScheme_Matrix_Dim_20240311]
+ [bsm].[MemberScheme_Lookup_Location_Dim]
+ [bsm1m].[MemberScheme_Matrix_Dim_20240311_bi_final]
+ [bsm1m].[MemberScheme_Matrix_Dim_20240311]
+---------------------------------
