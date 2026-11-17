@@ -153,3 +153,30 @@ ORDER BY
     Gender,
     CurrentStateCode,
     AgeGroup;
+--------------------------------------------------------------
+--powerbi report exact age calculation 
+-------------------------------------------------------------
+DECLARE @TodaysDate DATE = DATEADD(MINUTE, 330, GETUTCDATE());
+
+SELECT
+    current_tehsil,
+    COUNT(1) AS total,
+    CASE
+        WHEN DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) < 19 THEN '16-18'
+        WHEN DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) >= 18
+             AND DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) < 41 THEN '18-40'
+        WHEN DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) >= 40
+             AND DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) < 51 THEN '40-50'
+        ELSE 'Above 50'
+    END AS Age_Categories
+FROM uw_registrations
+GROUP BY
+    current_tehsil,
+    CASE
+        WHEN DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) < 19 THEN '16-18'
+        WHEN DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) >= 18
+             AND DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) < 41 THEN '18-40'
+        WHEN DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) >= 40
+             AND DATEDIFF(YEAR, aadhaar_doB, @TodaysDate) < 51 THEN '40-50'
+        ELSE 'Above 50'
+    END;
