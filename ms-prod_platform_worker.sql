@@ -109,3 +109,20 @@ GROUP BY
     d.District_name,
     sd.Subdistrict_Name,
     u.current_pincode;
+
+-------------------------------------------------------
+--VERIFIED DATA COUNT
+-------------------------------------------------------
+select * from ref_aggregator_platform where Platform_Name like '%Amazon Transportation %' -- 10253
+--API Platform Worker Count Downloaded
+select * from tbl_aggregator_verification_data_request where aggregator_platform_id ='10253' and request_end_time <'2026-09-02 00:00:00.000' and file_name is not null  --1
+--API Platform Worker Count Downloaded for Verification
+select sum(data_share_count) from tbl_aggregator_verification_data_request where aggregator_platform_id ='10253' and request_end_time <'2026-09-02 00:00:00.000' and file_name is not null --2
+--API Platform Worker Verification Count Uploaded Request
+select * from tbl_aggregator_verified_data_shared where aggregator_platform_id ='10253'  and response_datetime <'2026-09-02 00:00:00.000' and file_name is not null --3
+--API Platform Worker Verification Count Uploaded
+select sum(data_share_count) from tbl_aggregator_verified_data_shared where aggregator_platform_id ='10253' and response_datetime <'2026-09-02 00:00:00.000' and file_name is not null --4
+--API Platform Worker Utilization Count Uploaded Request
+select * from tbl_aggregator_verified_data_shared where file_type='2' and aggregator_platform_id = 10089 --5
+--API Platform Worker Utilization Count Uploaded
+select sum(data_share_count) from tbl_aggregator_verified_data_shared where file_type='2' and aggregator_platform_id = 10089 
