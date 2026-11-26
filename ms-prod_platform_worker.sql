@@ -113,6 +113,10 @@ GROUP BY
 -------------------------------------------------------
 --VERIFIED DATA COUNT
 -------------------------------------------------------
+--Check list of aggregator platform name that comes newer
+select r.Id,r.Platform_Name from tbl_aggregator_admin a 
+inner join ref_aggregator_platform r on r.Id=a.aggregator_platform_id
+--extract the aggregator id
 select * from ref_aggregator_platform where Platform_Name like '%Amazon Transportation %' -- 10253
 --API Platform Worker Count Downloaded
 select * from tbl_aggregator_verification_data_request where aggregator_platform_id ='10253' and request_end_time <'2026-09-02 00:00:00.000' and file_name is not null  --1
